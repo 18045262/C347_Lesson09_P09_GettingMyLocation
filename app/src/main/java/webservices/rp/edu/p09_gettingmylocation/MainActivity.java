@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d("File exists: " , "File is exists");
 //        }
 
-        folderLocation = Environment.getExternalStorageDirectory().getAbsolutePath() + "/P09";
+        folderLocation = Environment.getExternalStorageDirectory().getAbsolutePath() + "/L09";
         final File targetFile = new File(folderLocation);
         if (targetFile.exists() == false){
             boolean result = targetFile.mkdir();
@@ -111,46 +111,47 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, MyService.class);
                 startService(i);
+//
+//                if (checkPermission() == true){
+//
+//                    final LocationRequest mLocationRequest = LocationRequest.create();
+//                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//                    mLocationRequest.setInterval(10000);
+//                    mLocationRequest.setFastestInterval(5000);
+//                    mLocationRequest.setSmallestDisplacement(100);
+//
+//                    final LocationCallback mLocationCallback = new LocationCallback(){
+//                        @Override
+//                        public void onLocationResult(LocationResult locationResult){
+//                            if (locationResult != null){
+//                                Location locData = locationResult.getLastLocation();
+//                                String msg = "New location detected\n" +
+//                                        "Latitude: " + locData.getLatitude() + "\n" +
+//                                        "Longitude: " + locData.getLongitude();
+//                                Log.d("Write Message: " , msg);
+//
+//                                FileWriter writer = null;
+//                                try {
+//                                    writer = new FileWriter(targetFile,true);
+//                                    writer.write(msg + "\n");
+//                                    writer.flush();
+//                                    writer.close();
+//                                    Log.d("Write stated:","Success to write");
+//
+//                                } catch (IOException e) {
+//                                    Log.d("Write stated:","Failed to write!");
+//                                    e.printStackTrace();
+//                                }
+//                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    };
 
-                if (checkPermission() == true){
-
-                    final LocationRequest mLocationRequest = LocationRequest.create();
-                    mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    mLocationRequest.setInterval(10000);
-                    mLocationRequest.setFastestInterval(5000);
-                    mLocationRequest.setSmallestDisplacement(100);
-
-                    final LocationCallback mLocationCallback = new LocationCallback(){
-                        @Override
-                        public void onLocationResult(LocationResult locationResult){
-                            if (locationResult != null){
-                                Location locData = locationResult.getLastLocation();
-                                String msg = "New location detected\n" +
-                                        "Latitude: " + locData.getLatitude() + "\n" +
-                                        "Longitude: " + locData.getLongitude();
-
-                                FileWriter writer = null;
-                                try {
-                                    writer = new FileWriter(targetFile,true);
-                                    writer.write(msg + "\n");
-                                    writer.flush();
-                                    writer.close();
-                                    Log.d("Write stated:","Success to write");
-
-                                } catch (IOException e) {
-                                    Log.d("Write stated:","Failed to write!");
-                                    e.printStackTrace();
-                                }
-                                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    };
-
-
-                }
-                else{
-                    Toast.makeText(MainActivity.this, "No last location",Toast.LENGTH_SHORT).show();
-                }
+//
+//                }
+//                else{
+//                    Toast.makeText(MainActivity.this, "No last location",Toast.LENGTH_SHORT).show();
+//                }
 
 
             }
@@ -161,45 +162,34 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, MyService.class);
                 stopService(i);
-
-
-
             }
         });
 
         btnCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(targetFile.exists() == true){
-                    String data = "";
-
+                folderLocation= Environment.getExternalStorageDirectory().getAbsolutePath() + "/L09";
+                File targetFile = new File(folderLocation, "data.txt");
+                if (targetFile.exists() == true){
+                    String data ="";
                     try {
                         FileReader reader = new FileReader(targetFile);
-                        BufferedReader br = new BufferedReader(reader);
-
+                        BufferedReader br= new BufferedReader(reader);
                         String line = br.readLine();
-                        while (line!= null) {
+                        while (line != null) {
                             data += line + "\n";
                             line = br.readLine();
-
                         }
                         br.close();
                         reader.close();
-                        tv.setText(data);
-
-                        Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
-                    } catch (FileNotFoundException e) {
-                        Toast.makeText(MainActivity.this,"Failed to read!", Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, "Failed to read!", Toast.LENGTH_LONG).show();
                         e.printStackTrace();
                     }
+                    Toast.makeText(MainActivity.this, data, Toast.LENGTH_LONG).show();
                 }
-
             }
         });
-
     }
 
     private boolean checkPermission(){
